@@ -20,6 +20,21 @@
     background-color: brown;
 }
 
+.player-table {
+    left: 0;
+    padding: 5%;
+    height: 90%;
+    width: 90%;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+}
+
+.player-tile {
+    margin: 3px;
+    background-color: white;
+    border-radius: 5px;
+}
+
 .right-side {
     height: 100%;
     float: right;
@@ -31,14 +46,13 @@
     right: 0;
     height: 35%;
     width: 100%;
-    z-index: 2;
-    background-color: grey;
     display: grid;
     grid-template-columns: auto auto auto;
 }
 
 .rng-tile {
     margin: 5px;
+    border-radius: 5px;
 }
 
 .restart {

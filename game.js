@@ -1,61 +1,68 @@
 var rngArray = new Array(); rngArray = [8];
-var colors = ["red", "blue", "white", "orange", "yellow", "green"];
 var rngDiv = new Array(); rngDiv = [8];
+
+var playArray = new Array(); playArray = [24];
+var playDiv = new Array(); playDiv = [24];
+
+var colors = ["red", "blue", "white", "orange", "yellow", "green"];
+
 
 window.onload = function () {
     for (let i = 0; i < 9; i++) {
         rngDiv[i] = document.getElementById("r" + i);
     }
+    for (let i = 0; i < 25; i++) {
+        playDiv[i] = document.getElementById("l" + i);
+    }
 }
-
 function RNG(c) {
     return Math.floor((Math.random() * c));
 }
 
-function testDuplicate() {
-    let t0 = 0,
-        t1 = 0,
-        t2 = 0,
-        t3 = 0,
-        t4 = 0,
-        t5 = 0;
-    for (let i = 0; i < 9; i++) {
-        switch (rngArray[i]) {
-            case 0:
-                t0++;
-                break;
-            case 1:
-                t1++;
-                break;
-            case 2:
-                t2++;
-                break;
-            case 3:
-                t3++;
-                break;
-            case 4:
-                t4++;
-                break;
-            case 5:
-                t5++;
-                break;
-        }
+function testDuplicate(A) {
+    let testArray = new Array;
+    testArray = [A.length];
+    for (let i = 0; i < A.length; i++) {
+        testArray[i] = 0;
     }
 
-    if (t0 > 4 || t1 > 4 || t2 > 4 || t3 > 4 || t4 > 4 || t5 > 4) {
-        test();
-    } else {
-        return 0;
+    for (let i = 0; i < A.length; i++) {
+        let testHold = 0;
+        for (let j = 0; j < A.length; j++) {
+            if (A[i] == A[j]) {
+                testHold++;
+                console.log(testHold);
+            }
+        }
+        if (testHold > 4) {
+            console.log("Opalio je");
+            restart();
+
+        } else {
+            return 0;
+        } 
     }
 }
 
-function test() {
-    for (let i = 0; i < 9; i++) {
+function restart() {
+/*     for (let i = 0; i < 9; i++) {
         rngArray[i] = RNG(6);
     }
-    testDuplicate();
+
+    testDuplicate(rngArray);
 
     for (let i = 0; i < 9; i++) {
         rngDiv[i].style.backgroundColor = colors[rngArray[i]];
+    } */
+
+
+    for (let i = 0; i < 24; i++) {
+        playArray[i] = RNG(6);
+    }
+
+    testDuplicate(playArray);
+
+    for (let i = 0; i < 24; i++) {
+        playDiv[i].style.backgroundColor = colors[playArray[i]];
     }
 }
