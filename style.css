@@ -10,14 +10,13 @@
     z-index: 1;
     top: 0;
     overflow: hidden;
-    background-color: blue;
 }
 
 .left-side {
     height: 100%;
     float: left;
     width: 65%;
-    background-color: brown;
+    background-color: rgb(12, 32, 63);
 }
 
 .player-table {
@@ -31,7 +30,6 @@
 
 .player-tile {
     margin: 3px;
-    background-color: white;
     border-radius: 5px;
 }
 
@@ -39,7 +37,7 @@
     height: 100%;
     float: right;
     width: 35%;
-    background-color: cadetblue;
+    background-color: #007991;
 }
 
 .rng {
@@ -56,7 +54,7 @@
 }
 
 .restart {
-    background-color: violet;
+    background-color: #E9D985;
     width: 100%;
     height: 15%;
 }
