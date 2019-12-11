@@ -14,6 +14,7 @@ var timerDiv = document.getElementById("timer");
 var moves = 0;
 var seconds = 0; 
 var minutes = 0;
+var timer;
 
 //initializing div into arrays
 window.onload = function () {
@@ -73,8 +74,32 @@ function testDuplicate(A) {
     }
 }
 
+function timerMove() {
+    seconds++;
+    if (seconds >= 60) {
+        seconds = 0;
+        minutes++;
+    }
+    if (minutes < 10) {
+        if (seconds < 10) {
+            timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + "0" + seconds;
+        } else {
+            timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + seconds;
+        }
+    } else {
+        if (seconds < 10) {
+            timerDiv.innerHTML = "Time: " + minutes + ":" + "0" + seconds;
+        } else {
+            timerDiv.innerHTML = "Time: " + minutes + ":" + seconds;
+        }
+    }
+}
+
 //self explanatory
 function restart() {
+    seconds = 0;
+    minutes = 0;
+
     rText.innerHTML = "RESTART";
     for (let i = 0; i < 9; i++) {
         rngArray[i] = RNG(6);
@@ -88,33 +113,17 @@ function restart() {
     moves = 0;
     movesDiv.innerHTML = "Moves: " + moves;
 
-    setInterval(() => {
-        seconds++;
-        if (seconds >= 60) {
-            seconds = 0;
-            minutes++;
-        }
-        if (minutes < 10) {
-            if (seconds < 10) {
-                timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + "0" + seconds;
-            } else {
-                timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + seconds;
-            }
-        } else {
-            if (seconds < 10) {
-                timerDiv.innerHTML = "Time: " + minutes + ":" + "0" + seconds;
-            } else {
-                timerDiv.innerHTML = "Time: " + minutes + ":" + seconds;
-            }
-        }
-    }, 1000);
-    seconds = 0;
-    minutes = 0;
+    timer = setInterval(timerMove, 1000);
+    timer.clearInterval();
+
 }
 //checking win condition every click or keyboardPress
 function checkWinCond(a, b) {
     if (JSON.stringify(a) === JSON.stringify(b)) {
         console.log("POBJEDA!");
+        console.log("moves: " + moves);
+        console.log("time: " + minutes + ":" + seconds);
+        timer.clearInterval();
         return 1;
     }
 }
@@ -207,5 +216,6 @@ document.onkeydown = function(e) {
 
     checkWinCond(checkArray, rngArray);
 }
+
 
 //triban ubacit tajmer i brojač poteza
