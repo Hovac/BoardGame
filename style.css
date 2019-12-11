@@ -16,7 +16,8 @@
     height: 100%;
     float: left;
     width: 65%;
-    background-color: rgb(12, 32, 63);
+    /*background-color: rgb(12, 32, 63);*/
+    background-color: #211d1d;
 }
 
 .player-table {
@@ -37,7 +38,7 @@
     height: 100%;
     float: right;
     width: 35%;
-    background-color: #007991;
+    background-color: #383030;
 }
 
 .rng {
@@ -53,8 +54,17 @@
     border-radius: 5px;
 }
 
-.restart {
+.restart-btn {
     background-color: #E9D985;
     width: 100%;
     height: 15%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+.restart-text {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }

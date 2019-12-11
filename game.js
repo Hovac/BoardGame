@@ -1,17 +1,14 @@
 //many global variables, will solve later
-var rngArray = new Array();
-rngArray = [8];
-var rngDiv = new Array();
-rngDiv = [8];
+var colors = ["#d61745", "#3569bc", "white", "#f4862a", "#eaed19", "#329f64", "black"];
 
-var playDiv = new Array();
-playDiv = [24];
+var rngArray = [0,0,0,0,0,0,0,0,0];
+var rngDiv = [0,0,0,0,0,0,0,0,0];
+
+var playDiv = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,];
 var playArray = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6]
 
-var checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
-
-var colors = ["red", "blue", "white", "orange", "yellow", "green", "black"];
 var playTable = document.getElementById("player_table");
+var rText = document.getElementById("restart-text");
 //initializing div into arrays
 window.onload = function () {
     for (let i = 0; i < 9; i++) {
@@ -37,15 +34,20 @@ function shuffleColor(arr) {
     }
     return arr;
 }
+//renders the blocks
+function renderTable(blocks, places) {
+    for (let i = 0; i < blocks.length; i++) {
+        blocks[i].style.backgroundColor = colors[places[i]];
+    }
+}
 
-//tests if there are 4 duplicates in an array. Currently only used in "check condition array" -> "CCA", since it must have equal chance to spawn 4 same colors but not more. If i used shuffle for the CCA, there wouldn't be equal distribution of the colours.
+//tests if there are 4 duplicates in an array. Currently used only in rngArray
 function testDuplicate(A) {
     let testArray = new Array;
     testArray = [A.length];
     for (let i = 0; i < A.length; i++) {
         testArray[i] = 0;
     }
-    //always small arrays, can have quadratic time
     for (let i = 0; i < A.length; i++) {
         let testHold = 0;
         for (let j = 0; j < A.length; j++) {
@@ -63,34 +65,27 @@ function testDuplicate(A) {
     }
 }
 
-// check condition playDiv [6,7,8,11,12,13,16,17,18]
-function testCondition(playBoard, testBoard) {
-    //check manually playBoard[6,7,8,11,12,13,16,17,18] against testBoard[0,1,2,3,4,5,6,7,8]
-}
-
 //self explanatory
 function restart() {
     for (let i = 0; i < 9; i++) {
         rngArray[i] = RNG(6);
     }
     testDuplicate(rngArray);
-    for (let i = 0; i < 9; i++) {
-        rngDiv[i].style.backgroundColor = colors[rngArray[i]];
-    }
+    renderTable(rngDiv, rngArray);
 
     shuffleColor(playArray);
+    renderTable(playDiv, playArray);
 
-    for (let i = 0; i < 25; i++) {
-        playDiv[i].style.backgroundColor = colors[playArray[i]];
-    }
+    rText.innerHTML = "RESTART";
 }
-
-function checkCond(play, cond) {
-    if (play == cond) {
+//checking win condition every click or keyboardPress
+function checkWinCond(a, b) {
+    if (JSON.stringify(a) === JSON.stringify(b)) {
+        console.log("POBJEDA!");
         return 1;
     }
 }
-
+//mouse controls
 playTable.addEventListener("click", function (e) {
     if (e.target.style.backgroundColor != "black") {
         let a = parseInt(e.path[0].id.substr(1), 10);
@@ -115,21 +110,18 @@ playTable.addEventListener("click", function (e) {
             playArray[a + 5] = playArray[a];
             playArray[a] = t;
         }
-        //bruteforce rendering whole array since it isn't big array
-        for (let i = 0; i < 25; i++) {
-            playDiv[i].style.backgroundColor = colors[playArray[i]];
-        }
-        checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
+        //rendering whole array since it isn't big array. Have to think of a way to only render those blocks that changed...
+        renderTable(playDiv, playArray);
 
-        if (JSON.stringify(checkArray) === JSON.stringify(rngArray)) {
-            console.log("POBJEDA!");
-        }
+        //storing parts of playArray in checkArray so it is easier to check for win condition
+        let checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
+        //checking win condition
+        checkWinCond(checkArray, rngArray);
     }
 });
 
-document.onkeydown = keyNav;
-
-function keyNav(e) {
+//keyboard controls
+document.onkeydown = function(e) {
     let p = playArray.indexOf(6);
     //gore
     if (e.keyCode == 38) {
@@ -163,12 +155,11 @@ function keyNav(e) {
             playArray[p] = t;
         }
     }
-    for (let i = 0; i < 25; i++) {
-        playDiv[i].style.backgroundColor = colors[playArray[i]];
-    }
-    checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
+    renderTable(playDiv, playArray);
 
-    if (JSON.stringify(checkArray) === JSON.stringify(rngArray)) {
-        console.log("POBJEDA!");
-    }
+    let checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
+
+    checkWinCond(checkArray, rngArray);
 }
+
+//triban ubacit tajmer i brojač poteza
