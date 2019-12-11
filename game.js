@@ -9,6 +9,12 @@ var playArray = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 
 
 var playTable = document.getElementById("player_table");
 var rText = document.getElementById("restart-text");
+var movesDiv = document.getElementById("moves");
+var timerDiv = document.getElementById("timer");
+var moves = 0;
+var seconds = 0; 
+var minutes = 0;
+
 //initializing div into arrays
 window.onload = function () {
     for (let i = 0; i < 9; i++) {
@@ -17,6 +23,8 @@ window.onload = function () {
     for (let i = 0; i < 25; i++) {
         playDiv[i] = document.getElementById("l" + i);
     }
+    renderTable(rngDiv, rngArray);
+    renderTable(playDiv, playArray);
 }
 //basic whole number RNG function so i don't have to write it all the time
 function RNG(c) {
@@ -67,16 +75,41 @@ function testDuplicate(A) {
 
 //self explanatory
 function restart() {
+    rText.innerHTML = "RESTART";
     for (let i = 0; i < 9; i++) {
         rngArray[i] = RNG(6);
     }
     testDuplicate(rngArray);
-    renderTable(rngDiv, rngArray);
 
+    renderTable(rngDiv, rngArray);
     shuffleColor(playArray);
     renderTable(playDiv, playArray);
 
-    rText.innerHTML = "RESTART";
+    moves = 0;
+    movesDiv.innerHTML = "Moves: " + moves;
+
+    setInterval(() => {
+        seconds++;
+        if (seconds >= 60) {
+            seconds = 0;
+            minutes++;
+        }
+        if (minutes < 10) {
+            if (seconds < 10) {
+                timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + "0" + seconds;
+            } else {
+                timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + seconds;
+            }
+        } else {
+            if (seconds < 10) {
+                timerDiv.innerHTML = "Time: " + minutes + ":" + "0" + seconds;
+            } else {
+                timerDiv.innerHTML = "Time: " + minutes + ":" + seconds;
+            }
+        }
+    }, 1000);
+    seconds = 0;
+    minutes = 0;
 }
 //checking win condition every click or keyboardPress
 function checkWinCond(a, b) {
@@ -94,27 +127,34 @@ playTable.addEventListener("click", function (e) {
             t = playArray[a - 5];
             playArray[a - 5] = playArray[a];
             playArray[a] = t;
+            moves++;
         }
         if (playArray[a - 1] == 6) {
             t = playArray[a - 1];
             playArray[a - 1] = playArray[a];
             playArray[a] = t;
+            moves++;
         }
         if (playArray[a + 1] == 6) {
             t = playArray[a + 1];
             playArray[a + 1] = playArray[a];
             playArray[a] = t;
+            moves++;
         }
         if (playArray[a + 5] == 6) {
             t = playArray[a + 5];
             playArray[a + 5] = playArray[a];
             playArray[a] = t;
+            moves++;
         }
         //rendering whole array since it isn't big array. Have to think of a way to only render those blocks that changed...
         renderTable(playDiv, playArray);
 
         //storing parts of playArray in checkArray so it is easier to check for win condition
         let checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
+
+        movesDiv.innerHTML = "Moves: " + moves;
+        
         //checking win condition
         checkWinCond(checkArray, rngArray);
     }
@@ -129,6 +169,7 @@ document.onkeydown = function(e) {
             let t = playArray[p - 5];
             playArray[p - 5] = playArray[p];
             playArray[p] = t;
+            moves++;
         }
     }
     //dolje
@@ -137,6 +178,7 @@ document.onkeydown = function(e) {
             let t = playArray[p + 5];
             playArray[p + 5] = playArray[p];
             playArray[p] = t;
+            moves++;
         }
     }
     //lijevo
@@ -145,6 +187,7 @@ document.onkeydown = function(e) {
             let t = playArray[p - 1];
             playArray[p - 1] = playArray[p];
             playArray[p] = t;
+            moves++;
         }
     }
     //desno
@@ -153,9 +196,12 @@ document.onkeydown = function(e) {
             let t = playArray[p + 1];
             playArray[p + 1] = playArray[p];
             playArray[p] = t;
+            moves++;
         }
     }
     renderTable(playDiv, playArray);
+
+    movesDiv.innerHTML = "Moves: " + moves;
 
     let checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
 
