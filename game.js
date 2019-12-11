@@ -1,10 +1,10 @@
 //many global variables, will solve later
 var colors = ["#d61745", "#3569bc", "white", "#f4862a", "#eaed19", "#329f64", "black"];
 
-var rngArray = [0,0,0,0,0,0,0,0,0];
-var rngDiv = [0,0,0,0,0,0,0,0,0];
+var rngArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var rngDiv = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-var playDiv = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,];
+var playDiv = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
 var playArray = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6]
 
 var playTable = document.getElementById("player_table");
@@ -12,7 +12,7 @@ var rText = document.getElementById("restart-text");
 var movesDiv = document.getElementById("moves");
 var timerDiv = document.getElementById("timer");
 var moves = 0;
-var seconds = 0; 
+var seconds = 0;
 var minutes = 0;
 var timer;
 
@@ -99,8 +99,9 @@ function timerMove() {
 function restart() {
     seconds = 0;
     minutes = 0;
+    timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + "0" + seconds;
+    clearInterval(timer);
 
-    rText.innerHTML = "RESTART";
     for (let i = 0; i < 9; i++) {
         rngArray[i] = RNG(6);
     }
@@ -114,7 +115,6 @@ function restart() {
     movesDiv.innerHTML = "Moves: " + moves;
 
     timer = setInterval(timerMove, 1000);
-    timer.clearInterval();
 
 }
 //checking win condition every click or keyboardPress
@@ -163,14 +163,14 @@ playTable.addEventListener("click", function (e) {
         let checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
 
         movesDiv.innerHTML = "Moves: " + moves;
-        
+
         //checking win condition
         checkWinCond(checkArray, rngArray);
     }
 });
 
 //keyboard controls
-document.onkeydown = function(e) {
+document.onkeydown = function (e) {
     let p = playArray.indexOf(6);
     //gore
     if (e.keyCode == 38) {
