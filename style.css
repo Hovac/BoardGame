@@ -83,3 +83,67 @@
     font-size: 1.5em;
     text-align: center;
 }
+
+.win-screen {
+    display: block;
+    padding: 0 1em;
+    text-align: center;
+    width: 100%;
+}
+
+@media (min-width: 43.75em) {
+    .win-screen {
+        padding: 1em 2em;
+        text-align: right;
+    }
+}
+
+.win-overlay {
+    background: black;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    position: fixed;
+    text-align: center;
+    z-index: -800;
+    opacity: 0;
+    overflow: hidden;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: all 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.win-box {
+    padding: 1em .75em;
+    position: relative;
+    margin: 1em auto;
+    width: 90%;
+}
+
+@media (min-height: 37.5em) {
+    .win-box {
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        -webkit-transform: translate(-50%, -80%);
+        -ms-transform: translate(-50%, -80%);
+        transform: translate(-50%, -80%);
+    }
+}
+
+@media (min-width: 50em) {
+    .modal__box {
+        padding: 1.75em;
+    }
+}
+
+.win-box p {
+    color: #FFDE16;
+    text-align: center;
+    opacity: 1;
+}

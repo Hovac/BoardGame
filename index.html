@@ -9,10 +9,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body id="testBody">
+<body>
+    <div class="win-screen">
+        <div id="win-screen" class="win-overlay">
+            <div class="win-box">
+                <p>CONGRATULATIONS!</p>
+                <p>You finished the board in:</p>
+                <div>
+                    <p id="win-moves"></p>
+                    <p id="win-time"></p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="table">
         <div class="left-side">
-            <div id="player_table" class="player-table">
+            <div id="player-table" class="player-table">
                     <div class="player-tile" id="l0"></div>
                     <div class="player-tile" id="l1"></div>
                     <div class="player-tile" id="l2"></div>
@@ -52,7 +64,7 @@
                 <div class="rng-tile" id="r7"></div>
                 <div class="rng-tile" id="r8"></div>
             </div>
-            <div class="restart-btn" onclick="restart()">
+            <div class="restart-btn" id="restart" onclick="restart()">
                 <p id="restart-text" class="restart-text">
                     NEW GAME
                 </p>

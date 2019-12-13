@@ -5,9 +5,9 @@ var rngArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 var rngDiv = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var playDiv = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
-var playArray = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6]
+var playArray = [0, 0, 0, 0, 2, 1, 1, 1, 1, 2, 3, 3, 3, 3, 2, 4, 4, 4, 4, 2, 5, 5, 5, 5, 6]
 
-var playTable = document.getElementById("player_table");
+var playTable = document.getElementById("player-table");
 var rText = document.getElementById("restart-text");
 var movesDiv = document.getElementById("moves");
 var timerDiv = document.getElementById("timer");
@@ -15,6 +15,7 @@ var moves = 0;
 var seconds = 0;
 var minutes = 0;
 var timer;
+var winScreen = document.getElementById("win-screen");
 
 //initializing div into arrays
 window.onload = function () {
@@ -120,13 +121,31 @@ function restart() {
 //checking win condition every click or keyboardPress
 function checkWinCond(a, b) {
     if (JSON.stringify(a) === JSON.stringify(b)) {
-        console.log("POBJEDA!");
-        console.log("moves: " + moves);
-        console.log("time: " + minutes + ":" + seconds);
-        timer.clearInterval();
+        winScreen.style.zIndex = 50;
+        winScreen.style.opacity = 1;
+        document.getElementById("win-moves").innerHTML = "Moves: " + moves;
+        if (minutes < 10) {
+            if (seconds < 10) {
+                document.getElementById("win-time").innerHTML = "Time: " + "0" + minutes + ":" + "0" + seconds;
+            } else {
+                document.getElementById("win-time").innerHTML = "Time: " + "0" + minutes + ":" + seconds;
+            }
+        } else {
+            if (seconds < 10) {
+                document.getElementById("win-time").innerHTML = "Time: " + minutes + ":" + "0" + seconds;
+            } else {
+                document.getElementById("win-time").innerHTML = "Time: " + minutes + ":" + seconds;
+            }
+        }
         return 1;
     }
 }
+
+winScreen.addEventListener("click", function() {
+    winScreen.style.zIndex = -50;
+    winScreen.style.opacity = 0;
+});
+
 //mouse controls
 playTable.addEventListener("click", function (e) {
     if (e.target.style.backgroundColor != "black") {
@@ -168,7 +187,6 @@ playTable.addEventListener("click", function (e) {
         checkWinCond(checkArray, rngArray);
     }
 });
-
 //keyboard controls
 document.onkeydown = function (e) {
     let p = playArray.indexOf(6);
@@ -216,6 +234,3 @@ document.onkeydown = function (e) {
 
     checkWinCond(checkArray, rngArray);
 }
-
-
-//triban ubacit tajmer i brojač poteza
