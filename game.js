@@ -1,4 +1,3 @@
-//many global variables, will solve later
 var colors = ["#d61745", "#3569bc", "white", "#f4862a", "#eaed19", "#329f64", "black"];
 
 var rngArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -11,11 +10,13 @@ var playTable = document.getElementById("player-table");
 var rText = document.getElementById("restart-text");
 var movesDiv = document.getElementById("moves");
 var timerDiv = document.getElementById("timer");
+var winScreen = document.getElementById("win-screen");
 var moves = 0;
 var seconds = 0;
 var minutes = 0;
 var timer;
-var winScreen = document.getElementById("win-screen");
+
+
 
 //initializing div into arrays
 window.onload = function () {
@@ -137,11 +138,10 @@ function checkWinCond(a, b) {
                 document.getElementById("win-time").innerHTML = "Time: " + minutes + ":" + seconds;
             }
         }
-        return 1;
     }
 }
 
-winScreen.addEventListener("click", function() {
+winScreen.addEventListener("click", function () {
     winScreen.style.zIndex = -50;
     winScreen.style.opacity = 0;
 });
