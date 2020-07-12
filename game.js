@@ -1,59 +1,32 @@
 var colors = ["#d61745", "#3569bc", "white", "#f4862a", "#eaed19", "#329f64", "black"];
 
-var rngArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-var rngDiv = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var el = new Elements();
+var clr = new Coloring();
 
-var playDiv = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
-var playArray = [0, 0, 0, 0, 2, 1, 1, 1, 1, 2, 3, 3, 3, 3, 2, 4, 4, 4, 4, 2, 5, 5, 5, 5, 6]
-
-var playTable = document.getElementById("player-table");
-var rText = document.getElementById("restart-text");
-var movesDiv = document.getElementById("moves");
-var timerDiv = document.getElementById("timer");
-var winScreen = document.getElementById("win-screen");
 var moves = 0;
 var seconds = 0;
 var minutes = 0;
 var timer;
 
-
+var checkRNGArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var checkPlayArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 //initializing div into arrays
 window.onload = function () {
     for (let i = 0; i < 9; i++) {
-        rngDiv[i] = document.getElementById("r" + i);
+        el.rngDiv[i] = document.getElementById("r" + i);
     }
     for (let i = 0; i < 25; i++) {
-        playDiv[i] = document.getElementById("l" + i);
+        el.playDiv[i] = document.getElementById("l" + i);
     }
-    renderTable(rngDiv, rngArray);
-    renderTable(playDiv, playArray);
-}
-//basic whole number RNG function so i don't have to write it all the time
-function RNG(c) {
-    return Math.floor((Math.random() * c));
-}
-//shuffles elements of array in the same array, so i don't have to have more array XD
-function shuffleColor(arr) {
-    let m = arr.length,
-        t1, t2;
-    while (m) {
-        t1 = RNG(m--);
-        t2 = arr[m];
-        arr[m] = arr[t1];
-        arr[t1] = t2;
-    }
-    return arr;
-}
-//renders the blocks
-function renderTable(blocks, places) {
-    for (let i = 0; i < blocks.length; i++) {
-        blocks[i].style.backgroundColor = colors[places[i]];
-    }
+    el.renderTable(el.rngDiv, clr.rngColorPlaces);
+    el.renderTable(el.playDiv, clr.playColorPlaces);
+    el.setArrayCondition(clr.playColorPlaces);
+
 }
 
-//tests if there are 4 duplicates in an array. Currently used only in rngArray
-function testDuplicate(A) {
+//tests if there are 4 duplicates in an array. used only in rngArray - currently not needed, found bulletproof workaround
+/* function testDuplicate(A) {
     let testArray = new Array;
     testArray = [A.length];
     for (let i = 0; i < A.length; i++) {
@@ -69,12 +42,11 @@ function testDuplicate(A) {
         if (testHold > 4) {
             //maybe replace current element instead of starting the process of generating tiles over and over. Theoretically I can generate infinite times of 4+ same tiles, but practically that will *almost* never happen. maybe new solution later.
             restart();
-
         } else {
             return 0;
         }
     }
-}
+} */
 
 function timerMove() {
     seconds++;
@@ -82,155 +54,130 @@ function timerMove() {
         seconds = 0;
         minutes++;
     }
-    if (minutes < 10) {
-        if (seconds < 10) {
-            timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + "0" + seconds;
-        } else {
-            timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + seconds;
-        }
-    } else {
-        if (seconds < 10) {
-            timerDiv.innerHTML = "Time: " + minutes + ":" + "0" + seconds;
-        } else {
-            timerDiv.innerHTML = "Time: " + minutes + ":" + seconds;
-        }
-    }
+    el.timerWrite(minutes, seconds);
 }
 
 //self explanatory
 function restart() {
     seconds = 0;
     minutes = 0;
-    timerDiv.innerHTML = "Time: " + "0" + minutes + ":" + "0" + seconds;
+    el.timerRestart();
     clearInterval(timer);
-
-    for (let i = 0; i < 9; i++) {
-        rngArray[i] = RNG(6);
-    }
-    testDuplicate(rngArray);
-
-    renderTable(rngDiv, rngArray);
-    shuffleColor(playArray);
-    renderTable(playDiv, playArray);
-
     moves = 0;
-    movesDiv.innerHTML = "Moves: " + moves;
+    el.movesDiv.innerHTML = "Moves: " + moves;
+
+    //shuffles all 25 div like it is play array
+    clr.shuffleColor(clr.rngColorPlaces);
+    //but only renders first 9
+    el.renderTable(el.rngDiv, clr.rngColorPlaces);
+    //shuffles all 25 and renders all 25
+    clr.shuffleColor(clr.playColorPlaces);
+    el.renderTable(el.playDiv, clr.playColorPlaces);
 
     timer = setInterval(timerMove, 1000);
-
 }
+
 //checking win condition every click or keyboardPress
 function checkWinCond(a, b) {
     if (JSON.stringify(a) === JSON.stringify(b)) {
-        winScreen.style.zIndex = 50;
-        winScreen.style.opacity = 1;
-        document.getElementById("win-moves").innerHTML = "Moves: " + moves;
-        if (minutes < 10) {
-            if (seconds < 10) {
-                document.getElementById("win-time").innerHTML = "Time: " + "0" + minutes + ":" + "0" + seconds;
-            } else {
-                document.getElementById("win-time").innerHTML = "Time: " + "0" + minutes + ":" + seconds;
-            }
-        } else {
-            if (seconds < 10) {
-                document.getElementById("win-time").innerHTML = "Time: " + minutes + ":" + "0" + seconds;
-            } else {
-                document.getElementById("win-time").innerHTML = "Time: " + minutes + ":" + seconds;
-            }
-        }
+        el.winScreen.style.zIndex = 50;
+        el.winScreen.style.opacity = 1;
+        el.winMoves.innerHTML = "Moves: " + moves;
+        el.winTime.innerHTML = el.winString;
     }
 }
 
-winScreen.addEventListener("click", function () {
-    winScreen.style.zIndex = -50;
-    winScreen.style.opacity = 0;
+el.winScreen.addEventListener("click", function () {
+    el.winScreen.style.zIndex = -50;
+    el.winScreen.style.opacity = 0;
 });
 
 //mouse controls
-playTable.addEventListener("click", function (e) {
+el.playTable.addEventListener("click", function (e) {
     if (e.target.style.backgroundColor != "black") {
         let a = parseInt(e.path[0].id.substr(1), 10);
         let t = 0;
-        if (playArray[a - 5] == 6) {
-            t = playArray[a - 5];
-            playArray[a - 5] = playArray[a];
-            playArray[a] = t;
+        if (clr.playColorPlaces[a - 5] == 6) {
+            t = clr.playColorPlaces[a - 5];
+            clr.playColorPlaces[a - 5] = clr.playColorPlaces[a];
+            clr.playColorPlaces[a] = t;
             moves++;
         }
-        if (playArray[a - 1] == 6) {
-            t = playArray[a - 1];
-            playArray[a - 1] = playArray[a];
-            playArray[a] = t;
+        if (clr.playColorPlaces[a - 1] == 6) {
+            t = clr.playColorPlaces[a - 1];
+            clr.playColorPlaces[a - 1] = clr.playColorPlaces[a];
+            clr.playColorPlaces[a] = t;
             moves++;
         }
-        if (playArray[a + 1] == 6) {
-            t = playArray[a + 1];
-            playArray[a + 1] = playArray[a];
-            playArray[a] = t;
+        if (clr.playColorPlaces[a + 1] == 6) {
+            t = clr.playColorPlaces[a + 1];
+            clr.playColorPlaces[a + 1] = clr.playColorPlaces[a];
+            clr.playColorPlaces[a] = t;
             moves++;
         }
-        if (playArray[a + 5] == 6) {
-            t = playArray[a + 5];
-            playArray[a + 5] = playArray[a];
-            playArray[a] = t;
+        if (clr.playColorPlaces[a + 5] == 6) {
+            t = clr.playColorPlaces[a + 5];
+            clr.playColorPlaces[a + 5] = clr.playColorPlaces[a];
+            clr.playColorPlaces[a] = t;
             moves++;
         }
         //rendering whole array since it isn't big array. Have to think of a way to only render those blocks that changed...
-        renderTable(playDiv, playArray);
+        el.renderTable(el.playDiv, clr.playColorPlaces);
 
-        //storing parts of playArray in checkArray so it is easier to check for win condition
-        let checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
-
-        movesDiv.innerHTML = "Moves: " + moves;
+        //storing parts of clr.playColorPlaces in checkPlayArray so it is easier to check for win condition
+        checkPlayArray = el.setArrayCondition(clr.playColorPlaces, true);
+        checkRNGArray = el.setArrayCondition(clr.rngColorPlaces, false);
+        el.movesDiv.innerHTML = "Moves: " + moves;
 
         //checking win condition
-        checkWinCond(checkArray, rngArray);
+        checkWinCond(checkPlayArray, checkRNGArray);
     }
 });
 //keyboard controls
 document.onkeydown = function (e) {
-    let p = playArray.indexOf(6);
-    //gore
+    let p = clr.playColorPlaces.indexOf(6);
+    //up
     if (e.keyCode == 38) {
         if (p > 4) {
-            let t = playArray[p - 5];
-            playArray[p - 5] = playArray[p];
-            playArray[p] = t;
+            let t = clr.playColorPlaces[p - 5];
+            clr.playColorPlaces[p - 5] = clr.playColorPlaces[p];
+            clr.playColorPlaces[p] = t;
             moves++;
         }
     }
-    //dolje
+    //down
     if (e.keyCode == 40) {
         if (p < 20) {
-            let t = playArray[p + 5];
-            playArray[p + 5] = playArray[p];
-            playArray[p] = t;
+            let t = clr.playColorPlaces[p + 5];
+            clr.playColorPlaces[p + 5] = clr.playColorPlaces[p];
+            clr.playColorPlaces[p] = t;
             moves++;
         }
     }
-    //lijevo
+    //left
     if (e.keyCode == 37) {
         if (p != 0 && p != 5 && p != 10 && p != 15 && p != 20) {
-            let t = playArray[p - 1];
-            playArray[p - 1] = playArray[p];
-            playArray[p] = t;
+            let t = clr.playColorPlaces[p - 1];
+            clr.playColorPlaces[p - 1] = clr.playColorPlaces[p];
+            clr.playColorPlaces[p] = t;
             moves++;
         }
     }
-    //desno
+    //right
     if (e.keyCode == 39) {
         if (p != 4 && p != 9 && p != 14 && p != 19 && p != 24) {
-            let t = playArray[p + 1];
-            playArray[p + 1] = playArray[p];
-            playArray[p] = t;
+            let t = clr.playColorPlaces[p + 1];
+            clr.playColorPlaces[p + 1] = clr.playColorPlaces[p];
+            clr.playColorPlaces[p] = t;
             moves++;
         }
     }
-    renderTable(playDiv, playArray);
+    el.renderTable(el.playDiv, clr.playColorPlaces);
 
-    movesDiv.innerHTML = "Moves: " + moves;
+    el.movesDiv.innerHTML = "Moves: " + moves;
 
-    let checkArray = [playArray[6], playArray[7], playArray[8], playArray[11], playArray[12], playArray[13], playArray[16], playArray[17], playArray[18]];
+    checkPlayArray = el.setArrayCondition(clr.playColorPlaces, true);
+    checkRNGArray = el.setArrayCondition(clr.rngColorPlaces, false);
 
-    checkWinCond(checkArray, rngArray);
+    checkWinCond(checkPlayArray, checkRNGArray);
 }
